@@ -28,7 +28,7 @@ const ContactButton = dynamic(() => import("./contact-button"), {
 const LeftSide = memo(() => {
   return (
     <aside
-      className="flex-none w-full md:w-1/4 sticky top-4"
+      className="flex-none w-full sticky top-4"
       aria-label="Sidebar with personal information"
     >
       <AvatarComponent />

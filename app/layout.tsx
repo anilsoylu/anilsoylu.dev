@@ -11,7 +11,7 @@ const Header = dynamic(() => import("@/components/shared/header"), {
 
 const LeftSide = dynamic(() => import("@/components/shared/home/left-side"), {
   loading: () => (
-    <div className="w-full md:w-4/12 min-h-[200px] md:min-h-screen bg-gray-50" />
+    <div className="w-full min-h-[200px] md:min-h-screen bg-gray-50" />
   ),
 })
 

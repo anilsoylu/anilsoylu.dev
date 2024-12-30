@@ -1,32 +1,9 @@
 "use client"
 
+import { memo, useMemo, useCallback } from "react"
 import { usePathname } from "next/navigation"
 import { MenuListItems } from "@/data/menus"
-import { cn } from "@/lib/utils"
-import Link from "next/link"
-import { memo, useMemo, useCallback } from "react"
-
-interface MenuItem {
-  name: string
-  link: string
-}
-
-const MenuLink = memo(
-  ({ item, isActive }: { item: MenuItem; isActive: boolean }) => (
-    <Link
-      href={item.link}
-      className={cn(
-        "flex items-center space-x-2 text-gray-600 hover:text-black hover:underline leading-6 transition-colors duration-200",
-        isActive ? "text-black underline" : ""
-      )}
-      aria-current={isActive ? "page" : undefined}
-    >
-      {item.name}
-    </Link>
-  )
-)
-
-MenuLink.displayName = "MenuLink"
+import MenuLink from "./menu-link"
 
 const MenuList = memo(() => {
   const pathname = usePathname()
@@ -36,6 +13,10 @@ const MenuList = memo(() => {
     (link: string) => pathname === link,
     [pathname]
   )
+
+  if (!menuListItems?.length) {
+    return null
+  }
 
   return (
     <nav className="flex space-x-4" aria-label="Main navigation">

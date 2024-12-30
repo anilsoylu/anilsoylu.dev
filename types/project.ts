@@ -7,7 +7,15 @@ export interface Project {
   slug: string
 }
 
-export interface ProjectsData {
-  ProjectsTitle: string
-  Projects: Project[]
+export interface ProjectHeaderProps {
+  title: string
+}
+
+export interface ProjectGridProps {
+  projects: Project[]
+}
+
+export interface ProjectCardProps {
+  project: Project
+  isPriority?: boolean
 }

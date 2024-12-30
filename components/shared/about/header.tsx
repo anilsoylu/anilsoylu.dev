@@ -1,8 +1,5 @@
+import { AboutHeaderProps } from "@/types/about"
 import { memo } from "react"
-
-interface AboutHeaderProps {
-  title: string
-}
 
 const AboutHeader = memo(({ title }: AboutHeaderProps) => {
   return (
