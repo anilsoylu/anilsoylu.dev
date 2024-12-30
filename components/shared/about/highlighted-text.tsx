@@ -1,25 +1,40 @@
 import { HighlightedTextProps } from "@/types/about"
-import { memo } from "react"
+import { memo, useMemo } from "react"
 
 const HighlightedText = memo(({ text, keywords }: HighlightedTextProps) => {
-  const words = text.split(/(\s+)/)
+  const segments = useMemo(() => {
+    const sortedKeywords = [...keywords].sort((a, b) => b.length - a.length)
+    let result = [{ text, isHighlighted: false }]
+
+    sortedKeywords.forEach((keyword) => {
+      result = result.flatMap((segment) => {
+        if (segment.isHighlighted) return [segment]
+
+        const parts = segment.text.split(new RegExp(`(${keyword})`, "i"))
+        return parts.map((part) => ({
+          text: part,
+          isHighlighted: part.toLowerCase() === keyword.toLowerCase(),
+        }))
+      })
+    })
+
+    return result
+  }, [text, keywords])
 
   return (
     <>
-      {words.map((word, index) => {
-        const cleanWord = word.replace(/[^a-zA-Z0-9.]/g, "")
-        if (keywords.includes(cleanWord)) {
-          return (
-            <span
-              key={`${cleanWord}-${index}`}
-              className="font-bold transition-colors duration-200 hover:text-black/80"
-            >
-              {word}
-            </span>
-          )
-        }
-        return word
-      })}
+      {segments.map((segment, index) =>
+        segment.isHighlighted ? (
+          <span
+            key={`highlighted-${index}`}
+            className="font-bold transition-colors duration-200 hover:text-black/80"
+          >
+            {segment.text}
+          </span>
+        ) : (
+          segment.text
+        )
+      )}
     </>
   )
 })

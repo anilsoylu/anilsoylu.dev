@@ -2,7 +2,7 @@ import { memo } from "react"
 import HighlightedText from "./highlighted-text"
 import { AboutContentProps } from "@/types/about"
 
-const defaultKeywords = ["React", "Next.js", "React Native"]
+const defaultKeywords = ["React Native", "React", "Next.js"]
 
 const AboutContent = memo(
   ({ content, keywords = defaultKeywords }: AboutContentProps) => {
