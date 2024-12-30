@@ -171,8 +171,14 @@
     {
       "title": "The Pearl Clinic Antalya",
       "domain": "www.thepearlclinicantalya.com",
-      "slug": "https://www.thepearlclinicantalya.com/",
+      "slug": "https://www.thepearlclinicantalya.com",
       "date": 2024
+    },
+    {
+      "title": "NETFORM Mühendislik",
+      "domain": "www.netformmetal.com",
+      "slug": "https://netformmetal.com",
+      "date": 2018
     }
   ]
 }
