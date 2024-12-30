@@ -3,6 +3,7 @@ import "./globals.css"
 import Header from "@/components/shared/header"
 import data from "@/data/data.json"
 import LeftSide from "@/components/shared/home/left-side"
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 const beVietnamPro = Be_Vietnam_Pro({
   subsets: ["latin"],
@@ -33,6 +34,7 @@ export default function RootLayout({
             <LeftSide />
             <div className="flex-initial w-full md:w-8/12">{children}</div>
           </main>
+          <SpeedInsights />
         </div>
       </body>
     </html>
