@@ -1,3 +1,6 @@
+import { memo } from "react"
+import data from "@/data/data.json"
+import Image from "next/image"
 import { AspectRatio } from "@/components/ui/aspect-ratio"
 import {
   Card,
@@ -6,8 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import data from "@/data/data.json"
-import Image from "next/image"
+import Link from "next/link"
 
 export async function generateMetadata() {
   return {
@@ -15,30 +17,31 @@ export async function generateMetadata() {
   }
 }
 
-const AboutPage = () => {
+const ProjectPage = memo(() => {
   const sortedProjects = [...data.Projects].sort((a, b) => b.date - a.date)
 
   return (
     <div className="mb-7">
       <div className="flex flex-col mb-7">
-        <p className="justify-end text-2xl font-bold text-black uppercase flex mb-2.5">
+        <h1 className="text-2xl font-bold text-black uppercase mb-2.5">
           {data.ProjectsTitle}
-        </p>
+        </h1>
         <div className="h-0.5 bg-black w-full" />
         <div className="h-1 bg-black w-full mt-0.5" />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {sortedProjects.map((project, index) => (
-          <Card key={index} className="shadow-md">
+        {sortedProjects.map((project) => (
+          <Card key={project.title} className="shadow-md">
             <CardHeader>
               <AspectRatio ratio={16 / 9} className="bg-muted">
                 {project.path && (
                   <Image
-                    src={project.path as string | ""}
+                    src={project.path as string}
                     alt={project.title}
                     fill
                     className="h-full w-full rounded-md object-cover"
+                    priority={project === sortedProjects[0]}
                   />
                 )}
               </AspectRatio>
@@ -56,20 +59,22 @@ const AboutPage = () => {
                   {project.explain}
                 </p>
               )}
-              <a
+              <Link
                 href={project.slug}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-blue-500 hover:underline text-sm"
               >
                 Visit Website
-              </a>
+              </Link>
             </CardContent>
           </Card>
         ))}
       </div>
     </div>
   )
-}
+})
 
-export default AboutPage
+ProjectPage.displayName = "ProjectPage"
+
+export default ProjectPage

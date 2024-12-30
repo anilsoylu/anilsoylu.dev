@@ -1,27 +1,28 @@
+import { memo } from "react"
 import { Badge } from "@/components/ui/badge"
 import data from "@/data/data.json"
 
-const Hobby = () => {
+const Hobby = memo(() => {
   return (
     <>
-      <div className="flex flex-col mb-7">
-        <p className="justify-end text-2xl font-bold text-black uppercase flex mb-2.5">
+      <section className="flex flex-col my-7">
+        <h2 className="text-2xl font-bold text-black uppercase mb-2.5">
           {data.HobbyTitle}
-        </p>
+        </h2>
         <div className="h-0.5 bg-black w-full" />
         <div className="h-1 bg-black w-full mt-0.5" />
-      </div>
+      </section>
 
       <div className="flex flex-col w-full mb-7">
-        <p className="text-black text-opacity-60 mb-7 text-sm font-normal duration-1000">
+        <p className="text-black text-opacity-60 mb-7 text-sm font-normal duration-300">
           {data.Hobby.content}
         </p>
-        <div className="flex items-start flex-row flex-wrap gap-2 -translate-x-1.5 duration-1000">
+        <div className="flex items-start flex-row flex-wrap gap-2 -translate-x-1.5 duration-300">
           {data.Hobby.hobbies.map((hobby, idx) => (
             <Badge
               key={idx}
               variant="outline"
-              className="border-black hover:cursor-default text-xs font-bold  uppercase"
+              className="border-black hover:cursor-default text-xs font-bold uppercase"
             >
               {hobby}
             </Badge>
@@ -30,6 +31,8 @@ const Hobby = () => {
       </div>
     </>
   )
-}
+})
+
+Hobby.displayName = "Hobby"
 
 export default Hobby

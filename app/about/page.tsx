@@ -1,3 +1,4 @@
+import { memo } from "react"
 import data from "@/data/data.json"
 
 export async function generateMetadata() {
@@ -6,24 +7,23 @@ export async function generateMetadata() {
   }
 }
 
-const AboutPage = () => {
-  const boldKeywords = ["React", "Next.js", "React Native"]
+const boldKeywords = ["React", "Next.js", "React Native"]
 
-  const formatContent = (content: string) => {
-    return content.split(" ").map((word, index) => {
-      // Eğer kelime boldKeywords içinde varsa kalın yap
-      const cleanWord = word.replace(/[^a-zA-Z0-9.]/g, "") // Noktalama işaretlerini temizle
-      if (boldKeywords.includes(cleanWord)) {
-        return (
-          <span key={index} className="font-bold">
-            {word}{" "}
-          </span>
-        )
-      }
-      return <span key={index}>{word} </span>
-    })
-  }
+const formatContent = (content: string) => {
+  return content.split(" ").map((word, index) => {
+    const cleanWord = word.replace(/[^a-zA-Z0-9.]/g, "") // Noktalama işaretlerini temizle
+    if (boldKeywords.includes(cleanWord)) {
+      return (
+        <span key={index} className="font-bold">
+          {word}{" "}
+        </span>
+      )
+    }
+    return <span key={index}>{word} </span>
+  })
+}
 
+const AboutPage = memo(() => {
   return (
     <>
       <div className="flex flex-col mb-7">
@@ -41,6 +41,8 @@ const AboutPage = () => {
       </p>
     </>
   )
-}
+})
+
+AboutPage.displayName = "AboutPage"
 
 export default AboutPage

@@ -1,17 +1,17 @@
+import { Fragment, memo } from "react"
 import { Separator } from "@/components/ui/separator"
 import data from "@/data/data.json"
-import React from "react"
 
-const Experience = () => {
+const Experience = memo(() => {
   return (
     <>
-      <div className="flex flex-col mb-7">
-        <p className="justify-end text-2xl font-bold text-black uppercase flex mb-2.5">
+      <section className="flex flex-col mb-7">
+        <h2 className="text-2xl font-bold text-black uppercase mb-2.5">
           {data.ExperienceTitle}
-        </p>
+        </h2>
         <div className="h-0.5 bg-black w-full" />
         <div className="h-1 bg-black w-full mt-0.5" />
-      </div>
+      </section>
       <div className="flex flex-col gap-7 w-full">
         {data.Experience.map((detail, index) => (
           <div
@@ -29,12 +29,12 @@ const Experience = () => {
             </div>
             <div className="flex flex-col gap-1.5 w-full text-black text-opacity-60 text-sm font-normal mt-5 text-justify">
               {detail.achievements.map((achievement, idx) => (
-                <React.Fragment key={idx}>
+                <Fragment key={idx}>
                   <div>{achievement}</div>
-                  {index !== detail.achievements.length - 1 && (
+                  {idx !== detail.achievements.length - 1 && (
                     <Separator className="my-3" />
                   )}
-                </React.Fragment>
+                </Fragment>
               ))}
             </div>
           </div>
@@ -42,6 +42,8 @@ const Experience = () => {
       </div>
     </>
   )
-}
+})
+
+Experience.displayName = "Experience"
 
 export default Experience

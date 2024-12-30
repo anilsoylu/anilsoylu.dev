@@ -1,23 +1,22 @@
 import { Be_Vietnam_Pro } from "next/font/google"
 import "./globals.css"
 import Header from "@/components/shared/header"
-import LeftSide from "@/components/shared/home/left-side"
 import data from "@/data/data.json"
+import LeftSide from "@/components/shared/home/left-side"
 
 const beVietnamPro = Be_Vietnam_Pro({
   subsets: ["latin"],
-  weight: ["100", "300", "400", "500", "700"],
+  weight: ["400", "700"],
   style: ["normal", "italic"],
   variable: "--font-be-vietnam-pro",
+  preload: true,
 })
 
-export async function generateMetadata() {
-  return {
-    title: {
-      template: `%s | ${data.SiteTitle ?? `Anıl Soylu`}`,
-      default: data.SiteTitle ?? "Anıl Soylu",
-    },
-  }
+export const metadata = {
+  title: {
+    template: `%s | ${data.SiteTitle ?? "Anıl Soylu"}`,
+    default: data.SiteTitle ?? "Anıl Soylu",
+  },
 }
 
 export default function RootLayout({

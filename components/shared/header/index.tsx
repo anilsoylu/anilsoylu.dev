@@ -1,8 +1,9 @@
+import { memo } from "react"
 import { SocialListItems } from "@/data/social"
 import Link from "next/link"
 import MenuList from "./menu-list"
 
-const Header = () => {
+const Header = memo(() => {
   const socialListItems = SocialListItems()
 
   return (
@@ -24,6 +25,8 @@ const Header = () => {
       </div>
     </header>
   )
-}
+})
+
+Header.displayName = "Header"
 
 export default Header

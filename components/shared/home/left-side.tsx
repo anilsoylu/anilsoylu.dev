@@ -1,23 +1,32 @@
+import { memo } from "react"
+import dynamic from "next/dynamic"
+
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import AvatarComponent from "./avatar"
-import LeftInformation from "./info"
 import data from "@/data/data.json"
 
-const LeftSide = () => {
+const AvatarComponent = dynamic(() => import("./avatar"))
+const LeftInformation = dynamic(() => import("./info"))
+
+const LeftSide = memo(() => {
   return (
-    <div className="flex-none w-full md:w-1/4">
+    <aside className="flex-none w-full md:w-1/4">
       <AvatarComponent />
       <LeftInformation />
       <Button
         variant="link"
-        className="hover:no-underline my-10 border-2 border-black rounded-none w-full uppercase font-bold hover:bg-black hover:text-white"
+        className="my-10 w-full font-bold uppercase border-2 border-black rounded-none hover:bg-black hover:text-white hover:no-underline"
         asChild
+        aria-label="Send a message via email"
       >
-        <Link href={`mailto:${data.SiteMail}`}>Send Message</Link>
+        <Link href={`mailto:${data.SiteMail}`} prefetch={false}>
+          Send Message
+        </Link>
       </Button>
-    </div>
+    </aside>
   )
-}
+})
+
+LeftSide.displayName = "LeftSide"
 
 export default LeftSide
