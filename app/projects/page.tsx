@@ -1,80 +1,42 @@
-import { memo } from "react"
+import { Suspense } from "react"
 import data from "@/data/data.json"
-import Image from "next/image"
-import { AspectRatio } from "@/components/ui/aspect-ratio"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import Link from "next/link"
+import ProjectHeader from "@/components/shared/projects/header"
+import ProjectGrid from "@/components/shared/projects/project-grid"
 
 export async function generateMetadata() {
   return {
     title: "My Projects",
+    description: "Showcase of my recent projects and work",
   }
 }
 
-const ProjectPage = memo(() => {
-  const sortedProjects = [...data.Projects].sort((a, b) => b.date - a.date)
+const ProjectsLoadingSkeleton = () => (
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    {[...Array(4)].map((_, i) => (
+      <div key={i} className="animate-pulse">
+        <div className="aspect-video bg-gray-200 rounded-md mb-4" />
+        <div className="h-6 bg-gray-200 rounded w-3/4 mb-2" />
+        <div className="h-4 bg-gray-200 rounded w-1/2" />
+      </div>
+    ))}
+  </div>
+)
+
+export default function ProjectPage() {
+  if (!data.Projects?.length) {
+    return (
+      <div className="text-gray-500 text-center py-4">
+        No projects available
+      </div>
+    )
+  }
 
   return (
     <div className="mb-7">
-      <div className="flex flex-col mb-7">
-        <h1 className="text-2xl font-bold text-black uppercase mb-2.5">
-          {data.ProjectsTitle}
-        </h1>
-        <div className="h-0.5 bg-black w-full" />
-        <div className="h-1 bg-black w-full mt-0.5" />
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {sortedProjects.map((project) => (
-          <Card key={project.title} className="shadow-md">
-            <CardHeader>
-              <AspectRatio ratio={16 / 9} className="bg-muted">
-                {project.path && (
-                  <Image
-                    src={project.path as string}
-                    alt={project.title}
-                    fill
-                    className="h-full w-full rounded-md object-cover"
-                    priority={project === sortedProjects[0]}
-                  />
-                )}
-              </AspectRatio>
-              <CardTitle className="text-lg font-bold mt-4">
-                {project.title}
-              </CardTitle>
-              <CardDescription className="text-sm text-gray-500">
-                {project.domain}
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-gray-600 mb-2">Year: {project.date}</p>
-              {project.explain && (
-                <p className="text-xs italic text-gray-400">
-                  {project.explain}
-                </p>
-              )}
-              <Link
-                href={project.slug}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-500 hover:underline text-sm"
-              >
-                Visit Website
-              </Link>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+      <ProjectHeader title={data.ProjectsTitle} />
+      <Suspense fallback={<ProjectsLoadingSkeleton />}>
+        <ProjectGrid projects={data.Projects} />
+      </Suspense>
     </div>
   )
-})
-
-ProjectPage.displayName = "ProjectPage"
-
-export default ProjectPage
+}

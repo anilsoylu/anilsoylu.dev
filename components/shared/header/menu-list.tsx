@@ -4,29 +4,52 @@ import { usePathname } from "next/navigation"
 import { MenuListItems } from "@/data/menus"
 import { cn } from "@/lib/utils"
 import Link from "next/link"
-import { useMemo } from "react"
+import { memo, useMemo, useCallback } from "react"
 
-const MenuList = () => {
+interface MenuItem {
+  name: string
+  link: string
+}
+
+const MenuLink = memo(
+  ({ item, isActive }: { item: MenuItem; isActive: boolean }) => (
+    <Link
+      href={item.link}
+      className={cn(
+        "flex items-center space-x-2 text-gray-600 hover:text-black hover:underline leading-6 transition-colors duration-200",
+        isActive ? "text-black underline" : ""
+      )}
+      aria-current={isActive ? "page" : undefined}
+    >
+      {item.name}
+    </Link>
+  )
+)
+
+MenuLink.displayName = "MenuLink"
+
+const MenuList = memo(() => {
   const pathname = usePathname()
   const menuListItems = useMemo(() => MenuListItems(), [])
 
-  return (
-    <div className="flex space-x-4">
-      {menuListItems.map((item) => (
-        <Link
-          key={item.link}
-          href={item.link}
-          className={cn(
-            "flex items-center space-x-2 text-gray-600 hover:text-black hover:underline leading-6",
-            pathname === item.link ? "text-black underline" : ""
-          )}
-          aria-current={pathname === item.link ? "page" : undefined}
-        >
-          {item.name}
-        </Link>
-      ))}
-    </div>
+  const isActiveLink = useCallback(
+    (link: string) => pathname === link,
+    [pathname]
   )
-}
+
+  return (
+    <nav className="flex space-x-4" aria-label="Main navigation">
+      {menuListItems.map((item) => (
+        <MenuLink
+          key={item.link}
+          item={item}
+          isActive={isActiveLink(item.link)}
+        />
+      ))}
+    </nav>
+  )
+})
+
+MenuList.displayName = "MenuList"
 
 export default MenuList

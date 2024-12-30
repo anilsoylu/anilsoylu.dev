@@ -1,22 +1,38 @@
-import dynamic from "next/dynamic"
 import data from "@/data/data.json"
-
-const Experience = dynamic(() => import("@/components/shared/home/experience"))
-const Education = dynamic(() => import("@/components/shared/home/education"))
-const Skills = dynamic(() => import("@/components/shared/home/skills"))
-const Hobby = dynamic(() => import("@/components/shared/home/hobby"))
+import SectionWrapper from "@/components/shared/home/section-wrapper"
+import {
+  Experience,
+  Education,
+  Skills,
+  Hobby,
+} from "@/components/shared/home/sections"
+import {
+  ExperienceSkeleton,
+  EducationSkeleton,
+  SkillsSkeleton,
+  HobbySkeleton,
+} from "@/components/loading-states"
 
 export const metadata = {
   title: `HomePage | ${data.SiteTitle ?? "Anıl Soylu"}`,
+  description: "Personal portfolio and resume",
 }
+
+const sections = [
+  { Component: Experience, Skeleton: ExperienceSkeleton },
+  { Component: Education, Skeleton: EducationSkeleton },
+  { Component: Skills, Skeleton: SkillsSkeleton },
+  { Component: Hobby, Skeleton: HobbySkeleton },
+]
 
 export default function HomePage() {
   return (
-    <main>
-      <Experience />
-      <Education />
-      <Skills />
-      <Hobby />
+    <main className="space-y-12 pb-7">
+      {sections.map(({ Component, Skeleton }, index) => (
+        <SectionWrapper key={index} fallback={<Skeleton />}>
+          <Component />
+        </SectionWrapper>
+      ))}
     </main>
   )
 }
