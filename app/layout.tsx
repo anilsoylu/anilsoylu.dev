@@ -1,8 +1,9 @@
+import { Analytics } from "@vercel/analytics/next"
+import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Be_Vietnam_Pro } from "next/font/google"
 import "./globals.css"
 import dynamic from "next/dynamic"
 import data from "@/data/data.json"
-import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Suspense } from "react"
 
 const Header = dynamic(() => import("@/components/shared/header"), {
@@ -52,6 +53,7 @@ export default function RootLayout({
                 </Suspense>
               </div>
             </main>
+            <Analytics />
             <SpeedInsights />
           </div>
         </Suspense>
