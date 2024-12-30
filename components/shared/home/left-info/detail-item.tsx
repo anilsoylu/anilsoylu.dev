@@ -3,7 +3,7 @@ import { memo } from "react"
 
 const DetailItem = memo(({ detail }: DetailItemProps) => (
   <div
-    className="items-center border-b-2 border-black flex flex-row justify-between py-2.5 first:border-t-2
+    className="items-center flex flex-row justify-between py-2.5
                   hover:bg-black/5 transition-colors duration-200 group"
   >
     <dt className="text-black text-xs font-bold uppercase group-hover:scale-105 transition-transform duration-200">
