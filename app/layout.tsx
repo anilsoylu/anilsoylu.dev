@@ -10,7 +10,9 @@ const Header = dynamic(() => import("@/components/shared/header"), {
 })
 
 const LeftSide = dynamic(() => import("@/components/shared/home/left-side"), {
-  loading: () => <div className="w-4/12 h-screen bg-gray-50" />,
+  loading: () => (
+    <div className="w-full md:w-4/12 min-h-[200px] md:min-h-screen bg-gray-50" />
+  ),
 })
 
 const beVietnamPro = Be_Vietnam_Pro({
@@ -40,9 +42,11 @@ export default function RootLayout({
         <Suspense fallback={<div>Loading...</div>}>
           <div className="container px-5 md:px-0 mx-auto max-w-6xl">
             <Header />
-            <main className="flex flex-col md:flex-row items-start gap-x-[70px] flex-none flex-nowrap justify-between w-full">
-              <LeftSide />
-              <div className="flex-initial w-full md:w-8/12">
+            <main className="flex flex-col md:flex-row items-start gap-y-8 md:gap-x-[70px] flex-none flex-nowrap justify-between w-full relative">
+              <div className="w-full md:w-4/12 md:sticky md:top-4">
+                <LeftSide />
+              </div>
+              <div className="flex-initial w-full md:w-8/12 bg-white md:bg-transparent z-10 relative">
                 <Suspense fallback={<div>Loading content...</div>}>
                   {children}
                 </Suspense>
