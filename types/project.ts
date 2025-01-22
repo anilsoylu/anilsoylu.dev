@@ -4,6 +4,7 @@ export interface Project {
   date: number
   path?: string
   explain?: string
+  technologies?: string[]
   slug: string
 }
 

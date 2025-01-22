@@ -6,10 +6,12 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
 import type { Project } from "@/types/project"
+import TechnologiesList from "./tech-list"
 
 interface ProjectCardProps {
   project: Project
@@ -19,7 +21,7 @@ interface ProjectCardProps {
 const ProjectCard = memo(
   ({ project, isPriority = false }: ProjectCardProps) => {
     return (
-      <Card className="shadow-md group hover:shadow-lg transition-shadow duration-300">
+      <Card className="shadow-md group hover:shadow-lg transition-shadow duration-300 flex flex-col h-full">
         <CardHeader>
           <AspectRatio ratio={16 / 9} className="bg-muted overflow-hidden">
             {project.path && (
@@ -32,30 +34,31 @@ const ProjectCard = memo(
               />
             )}
           </AspectRatio>
+        </CardHeader>
+        <CardContent className="flex-grow">
           <CardTitle className="text-lg font-bold mt-4">
             {project.title}
           </CardTitle>
           <CardDescription className="text-sm text-gray-500">
             {project.domain}
           </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm text-gray-600 mb-2">Year: {project.date}</p>
+          {project.technologies && <TechnologiesList project={project} />}
+        </CardContent>
+        <CardFooter className="flex flex-row items-center justify-start gap-2">
+          <p className="text-sm text-gray-600">Year: {project.date}</p>
           {project.explain && (
-            <p className="text-xs italic text-gray-400 mb-2">
-              {project.explain}
-            </p>
+            <p className="text-xs italic text-gray-400">{project.explain}</p>
           )}
           <Link
             href={project.slug}
             target="_blank"
             rel="noopener noreferrer"
             className="text-blue-500 hover:underline text-sm inline-block
-                   transition-colors duration-200 hover:text-blue-600"
+               transition-colors duration-200 hover:text-blue-600"
           >
             Visit Website
           </Link>
-        </CardContent>
+        </CardFooter>
       </Card>
     )
   }

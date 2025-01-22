@@ -185,6 +185,21 @@
       "domain": "www.netformmetal.com",
       "slug": "https://netformmetal.com",
       "date": 2018
+    },
+    {
+      "title": "PttAvm Clone",
+      "domain": "pttavm-clone.vercel.app",
+      "slug": "https://pttavm-clone.vercel.app",
+      "path": "/uploads/path/pttavm.png",
+      "date": 2025,
+      "technologies": [
+        "React 19",
+        "Next.js 15",
+        "Tailwind CSS",
+        "TypeScript",
+        "Prisma",
+        "PostgreSQL"
+      ]
     }
   ]
 }
