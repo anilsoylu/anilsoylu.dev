@@ -12,18 +12,59 @@ My personal website built with Next.js 15.
 
 ## Tech Stack
 
-- [Next.js](https://nextjs.org)
-- [Tailwind CSS](https://tailwindcss.com)
-- [shadcn/ui](https://ui.shadcn.com)
-- [Raindrop.io](https://raindrop.io)
-- [Vercel](https://vercel.com)
+This project uses the following technologies and libraries:
+
+### Framework & Core
+
+- **Next.js 15** – React-based full-stack framework
+- **React 19** – JavaScript library for building user interfaces
+
+### Styling & UI
+
+- **Tailwind CSS** – Utility-first CSS framework
+- **shadcn/ui** – UI components based on Radix UI
+- **Lucide React** – Modern and customizable icon set
+- **@tabler/icons-react** – Lightweight and beautiful icons
+- **Tailwind Merge** – To merge Tailwind CSS classes
+
+### State Management & Forms
+
+- **React Hook Form** – Performance centered form management
+- **Zod** – TypeScript-first validation and schema definition library
+- **@hookform/resolvers** – Validation integration for React Hook Form
+
+### UI Components & Animations
+
+- **Radix UI** – Accessible and flexible UI components (e.g., @radix-ui/react-dialog, @radix-ui/react-toast, @radix-ui/react-progress, etc.)
+- **Vaul** – A beautiful and animated sub-component built on Radix UI
+- **Sonner** – Modern and stylish notification/toast component
+
+### Networking & API
+
+- **Resend** – Modern API for email delivery
+- **React Tweet** – Component to embed tweets
+- **React Phone Number Input** – Component for phone number input
+
+### Deployment & Performance
+
+- **Vercel** – Hosting optimized for Next.js
+- **@vercel/analytics** – Vercel Analytics integration
+- **@vercel/speed-insights** – Performance and speed insights
+
+### Development & Tooling
+
+- **TypeScript** – Type-safe JavaScript
+- **ESLint** – Code quality checking
+- **PostCSS** – CSS processing
+- **Clsx** – Conditional class merging
+- **Class Variance Authority (CVA)** – For managing component variants
 
 ## Running Locally
 
 1. Clone the project:
 
 ```bash
-git clone https://github.com/anilsoylu/anilsoyludev-new.git
+git clone https://github.com/anilsoylu/anilsoylu.dev.git
 ```
 
 2. Install dependencies:
