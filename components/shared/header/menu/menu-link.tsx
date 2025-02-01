@@ -5,9 +5,10 @@ import Link from "next/link"
 import { cn } from "@/lib/utils"
 import { MenuLinkProps } from "@/types/menu"
 
-const MenuLink = memo(({ item, isActive }: MenuLinkProps) => (
+const MenuLink = memo(({ item, isActive, onClick }: MenuLinkProps) => (
   <Link
     href={item.link}
+    onClick={onClick}
     className={cn(
       "flex items-center space-x-2 text-gray-600 hover:text-black hover:underline",
       "leading-6 transition-colors duration-200 group",

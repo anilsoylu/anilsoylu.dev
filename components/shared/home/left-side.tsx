@@ -24,11 +24,18 @@ const LeftInformation = dynamic(() => import("@/components/shared/home/info"), {
   ),
 })
 
-const ContactButton = dynamic(() => import("./contact-button"), {
-  loading: () => (
-    <div className="my-10 w-full h-12 bg-gray-200 rounded-md animate-pulse" />
-  ),
-})
+const ContactButton = dynamic(
+  () =>
+    import("@/components/shared/home/contact-button").then(
+      (mod) => mod.ResponsiveContactButton
+    ),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="my-10 w-full h-12 bg-gray-200 rounded-md animate-pulse" />
+    ),
+  }
+)
 
 const LeftSide = memo(({ bookmarks }: { bookmarks: any }) => {
   const pathname = usePathname()
@@ -37,7 +44,7 @@ const LeftSide = memo(({ bookmarks }: { bookmarks: any }) => {
   if (isBookmarksPath) {
     return (
       <aside
-        className="flex-none w-full sticky top-4 md:w-4/12 md:sticky md:top-4"
+        className="flex-none w-full top-4 md:w-4/12 md:sticky md:top-4"
         aria-label="Sidebar with personal information"
       >
         <Suspense fallback={<ScreenLoadingSpinner />}>
@@ -60,7 +67,7 @@ const LeftSide = memo(({ bookmarks }: { bookmarks: any }) => {
 
   return (
     <aside
-      className="flex-none w-full sticky top-4 md:w-4/12 md:sticky md:top-4"
+      className="flex-none w-full top-4 md:w-4/12 md:sticky md:top-4"
       aria-label="Sidebar with personal information"
     >
       <AvatarComponent />

@@ -6,4 +6,5 @@ export interface MenuItem {
 export interface MenuLinkProps {
   item: MenuItem
   isActive: boolean
+  onClick: () => void
 }

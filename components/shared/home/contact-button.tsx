@@ -2,7 +2,7 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
-import { memo, useCallback, useMemo } from "react"
+import { memo, useCallback, useMemo, useEffect, useState } from "react"
 import { useToast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 import {
@@ -13,8 +13,19 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
+import { ScrollArea } from "@/components/ui/scroll-area"
 import {
   Form,
   FormControl,
@@ -26,7 +37,6 @@ import {
 import { useDisclosure } from "@/hooks/use-disclosure"
 import CustomPhoneInput from "@/components/phone-input"
 
-// Form şemasını component dışına taşıyalım
 const formSchema = z.object({
   name: z.string().min(2, {
     message: "Name must be at least 2 characters.",
@@ -43,72 +53,88 @@ const formSchema = z.object({
   }),
 })
 
-// Form Field bileşenini optimize edelim
-const FormFieldComponent = memo(
-  ({
-    name,
-    control,
-    label,
-    type = "text",
-    placeholder,
-    isTextArea = false,
-    isPhoneInput = false,
-  }: {
-    name: "name" | "email" | "phone" | "subject" | "message"
-    control: any
-    label: string
-    type?: string
-    placeholder: string
-    isTextArea?: boolean
-    isPhoneInput?: boolean
-  }) => (
-    <FormField
-      name={name}
-      control={control}
-      render={({ field }) => (
-        <FormItem>
-          <FormLabel>{label}</FormLabel>
-          <FormControl>
-            {isTextArea ? (
-              <Textarea
-                {...field}
-                placeholder={placeholder}
-                autoComplete="off"
-                required
-                className="min-h-[120px] border-gray-300 focus:border-black focus:ring-black rounded-none"
-              />
-            ) : isPhoneInput ? (
-              <CustomPhoneInput
-                value={field.value}
-                onChange={field.onChange}
-                defaultCountry="TR"
-                className="border-gray-300 focus:border-black focus:ring-black rounded-none"
-              />
-            ) : (
-              <Input
-                {...field}
-                type={type}
-                placeholder={placeholder}
-                autoComplete="off"
-                required={name !== "phone"}
-                className="border-gray-300 focus:border-black focus:ring-black rounded-none"
-              />
+// Form bileşeni
+const ContactForm = memo(({ onSubmit, form, formFields, onCancel }: any) => {
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        {formFields.map((field: any) => (
+          <FormField
+            key={field.name}
+            name={field.name}
+            control={form.control}
+            render={({ field: fieldProps }) => (
+              <FormItem className="mb-4">
+                <FormLabel>{field.label}</FormLabel>
+                <FormControl>
+                  {field.isTextArea ? (
+                    <Textarea
+                      {...fieldProps}
+                      placeholder={field.placeholder}
+                      className="min-h-[100px] resize-none"
+                    />
+                  ) : field.isPhoneInput ? (
+                    <CustomPhoneInput
+                      value={fieldProps.value}
+                      onChange={fieldProps.onChange}
+                      defaultCountry="TR"
+                    />
+                  ) : (
+                    <Input
+                      {...fieldProps}
+                      type={field.type || "text"}
+                      placeholder={field.placeholder}
+                      required={field.name !== "phone"}
+                    />
+                  )}
+                </FormControl>
+                <FormMessage />
+              </FormItem>
             )}
-          </FormControl>
-          <FormMessage />
-        </FormItem>
-      )}
-    />
+          />
+        ))}
+        <div className="flex flex-col gap-2 mt-6">
+          <Button
+            type="submit"
+            disabled={form.formState.isSubmitting}
+            className="w-full bg-black text-white hover:bg-gray-800"
+          >
+            {form.formState.isSubmitting ? "Sending..." : "Send Message"}
+          </Button>
+          {onCancel && (
+            <Button
+              type="button"
+              variant="outline"
+              onClick={onCancel}
+              className="w-full"
+            >
+              Cancel
+            </Button>
+          )}
+        </div>
+      </form>
+    </Form>
   )
-)
+})
 
-FormFieldComponent.displayName = "FormFieldComponent"
+ContactForm.displayName = "ContactForm"
 
-const ContactButton = memo(() => {
+// Ana bileşen
+const ResponsiveContactButton = memo(() => {
+  const [isMobile, setIsMobile] = useState(false)
+  const [isOpen, setIsOpen] = useState(false)
   const { toast } = useToast()
-  const { isOpen, onOpen, onClose } = useDisclosure()
 
-  // Form default değerlerini memoize edelim
+  // Ekran boyutunu kontrol et
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768)
+    }
+    checkMobile()
+    window.addEventListener("resize", checkMobile)
+    return () => window.removeEventListener("resize", checkMobile)
+  }, [])
+
   const defaultValues = useMemo(
     () => ({
       name: "",
@@ -141,6 +167,8 @@ const ContactButton = memo(() => {
             title: "Success!",
             description: "Your message has been sent successfully.",
           })
+          setIsOpen(false)
+          form.reset(defaultValues)
         } else {
           throw new Error("Failed to send message")
         }
@@ -150,15 +178,11 @@ const ContactButton = memo(() => {
           description: "Failed to send message. Please try again.",
           variant: "destructive",
         })
-      } finally {
-        onClose()
-        form.reset(defaultValues)
       }
     },
-    [form, toast, onClose, defaultValues]
+    [form, toast, defaultValues]
   )
 
-  // Form fields'ı memoize edelim
   const formFields = useMemo(
     () => [
       { name: "name", label: "Name", placeholder: "John Doe" },
@@ -185,58 +209,69 @@ const ContactButton = memo(() => {
     []
   )
 
+  const handleOpenChange = useCallback((open: boolean) => {
+    setIsOpen(open)
+  }, [])
+
+  const triggerButton = (
+    <Button
+      variant="outline"
+      onClick={() => setIsOpen(true)}
+      className="my-10 w-full font-bold uppercase border-2 border-black rounded-none 
+                hover:bg-black hover:text-white
+                transition-colors duration-200 ease-in-out"
+    >
+      Send Message
+    </Button>
+  )
+
+  if (isMobile) {
+    return (
+      <Drawer open={isOpen} onOpenChange={handleOpenChange}>
+        <DrawerTrigger asChild>{triggerButton}</DrawerTrigger>
+        <DrawerContent>
+          <ScrollArea className="h-[calc(100vh-100px)] p-4">
+            <DrawerHeader className="p-0 mb-6">
+              <DrawerTitle className="text-2xl font-bold">
+                Get in Touch
+              </DrawerTitle>
+              <DrawerDescription>
+                I&apos;ll get back to you as soon as possible.
+              </DrawerDescription>
+            </DrawerHeader>
+            <ContactForm
+              form={form}
+              onSubmit={onSubmit}
+              formFields={formFields}
+              onCancel={() => setIsOpen(false)}
+            />
+          </ScrollArea>
+        </DrawerContent>
+      </Drawer>
+    )
+  }
+
   return (
-    <Dialog open={isOpen} onOpenChange={onOpen}>
-      <DialogTrigger asChild>
-        <Button
-          variant="outline"
-          className="my-10 w-full font-bold uppercase border-2 border-black rounded-none 
-                    hover:bg-black hover:text-white
-                    transition-colors duration-200 ease-in-out"
-        >
-          Send Message
-        </Button>
-      </DialogTrigger>
+    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
+      <DialogTrigger asChild>{triggerButton}</DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold">Get in Touch</DialogTitle>
-          <DialogDescription className="text-gray-500">
+          <DialogDescription>
             I&apos;ll get back to you as soon as possible.
           </DialogDescription>
         </DialogHeader>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            {formFields.map((field) => (
-              <FormFieldComponent
-                key={field.name}
-                control={form.control}
-                {...field}
-                name={
-                  field.name as
-                    | "name"
-                    | "email"
-                    | "phone"
-                    | "subject"
-                    | "message"
-                }
-              />
-            ))}
-            <div className="flex w-full">
-              <Button
-                type="submit"
-                disabled={form.formState.isSubmitting}
-                className="bg-black text-white hover:bg-gray-800 px-8 w-full"
-              >
-                {form.formState.isSubmitting ? "Sending..." : "Send Message"}
-              </Button>
-            </div>
-          </form>
-        </Form>
+        <ContactForm
+          form={form}
+          onSubmit={onSubmit}
+          formFields={formFields}
+          onCancel={() => setIsOpen(false)}
+        />
       </DialogContent>
     </Dialog>
   )
 })
 
-ContactButton.displayName = "ContactButton"
+ResponsiveContactButton.displayName = "ResponsiveContactButton"
 
-export default ContactButton
+export { ResponsiveContactButton }
