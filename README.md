@@ -40,6 +40,8 @@ pnpm install
 
 ```bash
 NEXT_PUBLIC_RAINDROP_ACCESS_TOKEN=your_raindrop_token
+RESEND_API_KEY=your_resend_api_key
+CONTACT_EMAIL=your_email@example.com
 ```
 
 4. Start the development server:

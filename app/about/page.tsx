@@ -35,7 +35,11 @@ export default function AboutPage() {
           </div>
         }
       >
-        <AboutContent content={data.AboutPage.content} />
+        <AboutContent
+          content={data.AboutPage.content}
+          skills={data.AboutPage.skills}
+          experience={data.AboutPage.experience}
+        />
       </Suspense>
     </article>
   )

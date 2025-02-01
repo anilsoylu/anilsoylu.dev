@@ -108,7 +108,35 @@
   },
   "AboutPage": {
     "title": "Hey 👋, I'm Anıl Soylu!",
-    "content": "I’m a passionate Front-End Developer with over 9 years of experience in software development. My journey began in 2014, and since then, I have specialized in creating scalable and user-friendly web and mobile applications. My native language is Turkish, and I am proficient in English at an A2 level, continuously striving to improve. \n\nCurrently, I focus on projects using React, Next.js, and React Native, delivering innovative solutions to meet client needs. As a freelancer, I manage my own special projects while staying updated with the latest industry trends and technologies. My goal is to create impactful digital experiences through clean code, efficient designs, and a keen eye for detail. \n\nI believe in lifelong learning, adapting to challenges, and collaborating with cross-functional teams to achieve meaningful results. Whether it’s building applications from scratch or enhancing existing solutions, I’m always eager to contribute with dedication and creativity."
+    "subtitle": "Frontend Developer & UI Enthusiast",
+    "content": [
+      "I'm a passionate Frontend Developer with over 9 years of experience, specializing in React, Next.js, and React Native. My journey started in 2014, and I've been crafting scalable and user-friendly applications ever since.",
+      "I focus on writing clean, maintainable code and creating intuitive user interfaces that make a difference. My experience spans from small business websites to large-scale enterprise applications."
+    ],
+    "skills": {
+      "frontend": ["React", "Next.js", "React Native", "TypeScript"],
+      "styling": ["TailwindCSS", "ShadCN", "CSS3", "Sass"],
+      "tools": ["Git", "VS Code", "Figma", "npm/yarn"]
+    },
+    "experience": [
+      {
+        "company": "IWT Dijital Medya",
+        "position": "Full Stack Developer",
+        "years": "2014 - 2019",
+        "description": "Developed and maintained full-stack web applications using React and Node.js"
+      },
+      {
+        "company": "Freelance",
+        "position": "Frontend Developer",
+        "years": "2019 - Present",
+        "description": "Specializing in React and Next.js projects, helping clients bring their visions to life"
+      }
+    ],
+    "contact": {
+      "email": "your.email@example.com",
+      "github": "https://github.com/yourusername",
+      "linkedin": "https://linkedin.com/in/yourusername"
+    }
   },
   "Projects": [
     {

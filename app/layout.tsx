@@ -7,6 +7,7 @@ import data from "@/data/data.json"
 import { Suspense } from "react"
 import { getBookmarks } from "@/lib/raindrop"
 import { sortByProperty } from "@/lib/utils"
+import { Toaster } from "@/components/ui/toaster"
 
 const Header = dynamic(() => import("@/components/shared/header"), {
   loading: () => <div className="h-16" />,
@@ -63,6 +64,7 @@ export default async function RootLayout({
             </main>
             <Analytics />
             <SpeedInsights />
+            <Toaster />
           </div>
         </Suspense>
       </body>
