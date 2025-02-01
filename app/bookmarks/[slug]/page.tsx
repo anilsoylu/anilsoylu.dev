@@ -1,6 +1,5 @@
 import { Suspense } from "react"
 import { notFound } from "next/navigation"
-
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { PageTitle } from "@/components/page-title"
 import { FloatingHeader } from "@/components/floating-header"
@@ -34,15 +33,28 @@ async function fetchData(slug: string) {
   }
 }
 
-export default async function CollectionPage({
-  params,
-}: {
-  params: Promise<{ slug: string }>
-}) {
+interface PageParams {
+  slug: string
+}
+
+interface PageProps {
+  params: Promise<PageParams>
+}
+
+const defaultBookmarkData = {
+  result: false as const,
+  items: [],
+  count: 0,
+  page: 0,
+}
+
+export default async function CollectionPage({ params }: PageProps) {
   const slug = (await params).slug
   const data = await fetchData(slug)
 
-  if (!data) return null
+  if (!data) {
+    notFound()
+  }
 
   return (
     <ScrollArea className="bg-grid w-full" id={SCROLL_AREA_ID}>
@@ -58,7 +70,7 @@ export default async function CollectionPage({
           <Suspense fallback={<ScreenLoadingSpinner />}>
             <BookmarkList
               id={data.currentBookmark._id}
-              initialData={data.bookmarkItems}
+              initialData={data.bookmarkItems || defaultBookmarkData}
             />
           </Suspense>
         </div>
@@ -67,35 +79,39 @@ export default async function CollectionPage({
   )
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ slug: string }>
-}) {
+export async function generateMetadata({ params }: PageProps) {
   const slug = (await params).slug
 
-  const bookmarks = await getBookmarks()
-  const currentBookmark = bookmarks.find(
-    (bookmark: { slug: string }) => bookmark.slug === slug
-  )
-  if (!currentBookmark) return null
+  try {
+    const bookmarks = await getBookmarks()
+    const currentBookmark = bookmarks.find(
+      (bookmark: { slug: string }) => bookmark.slug === slug
+    )
 
-  const siteUrl = `/bookmarks/${slug}`
-  const seoTitle = `${currentBookmark.title} | Bookmarks`
-  const seoDescription = `A curated selection of various handpicked ${currentBookmark.title.toLowerCase()} bookmarks by Onur Şuyalçınkaya`
+    if (!currentBookmark) {
+      return null
+    }
 
-  return {
-    title: seoTitle,
-    description: seoDescription,
-    keywords: [
-      currentBookmark.title,
-      "bookmarks",
-      `${currentBookmark.title} bookmarks`,
-      "collection",
-      `${currentBookmark.title} collection`,
-    ],
-    alternates: {
-      canonical: siteUrl,
-    },
+    const siteUrl = `/bookmarks/${slug}`
+    const seoTitle = `${currentBookmark.title} | Bookmarks`
+    const seoDescription = `A curated selection of various handpicked ${currentBookmark.title.toLowerCase()} bookmarks by Onur Şuyalçınkaya`
+
+    return {
+      title: seoTitle,
+      description: seoDescription,
+      keywords: [
+        currentBookmark.title,
+        "bookmarks",
+        `${currentBookmark.title} bookmarks`,
+        "collection",
+        `${currentBookmark.title} collection`,
+      ],
+      alternates: {
+        canonical: siteUrl,
+      },
+    }
+  } catch (error) {
+    console.error("Error generating metadata:", error)
+    return null
   }
 }

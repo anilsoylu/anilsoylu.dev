@@ -1,14 +1,10 @@
-import { getBookmarks } from "@/lib/raindrop"
-import { sortByProperty } from "@/lib/utils"
+import { getBookmarkItems } from "@/lib/raindrop"
 import { TWEETS_COLLECTION_ID } from "@/lib/constants"
 import { BookmarkList } from "@/components/bookmark-list"
 
 async function fetchData() {
-  const bookmarks = await getBookmarks()
-  const sortedBookmarks = Array.isArray(bookmarks)
-    ? sortByProperty(bookmarks, "title")
-    : []
-  return { bookmarks: sortedBookmarks }
+  const bookmarks = await getBookmarkItems(TWEETS_COLLECTION_ID)
+  return { bookmarks }
 }
 
 export default async function Writing() {

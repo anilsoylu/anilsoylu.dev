@@ -1,5 +1,6 @@
 import dynamic from "next/dynamic"
 import { Link2Icon } from "lucide-react"
+import type { RaindropItem } from "@/lib/raindrop"
 
 const TweetCard = dynamic(() =>
   import("@/components/tweet-card/tweet-card").then((mod) => mod.TweetCard)
@@ -11,7 +12,7 @@ export const BookmarkCard = ({
   bookmark,
   order,
 }: {
-  bookmark: any
+  bookmark: RaindropItem
   order: number
 }) => {
   if (bookmark.link && bookmark.collectionId === TWEETS_COLLECTION_ID) {

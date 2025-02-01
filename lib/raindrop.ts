@@ -3,83 +3,119 @@ import "server-only"
 
 import { COLLECTION_IDS } from "@/lib/constants"
 
-const options = {
+export interface RaindropItem {
+  _id: CollectionId
+  title: string
+  link: string
+  created: string
+  excerpt: string
+  tags: string[]
+  cover: string
+  collectionId: CollectionId
+  domain: string
+  note?: string
+}
+
+export interface RaindropCollection {
+  _id: CollectionId
+  title: string
+  slug: string
+  count: number
+  created: string
+  lastUpdate: string
+}
+
+export interface RaindropResponse {
+  result: boolean
+  items: RaindropItem[]
+  count: number
+  page: number
+}
+
+export interface CollectionResponse {
+  result: boolean
+  items: RaindropCollection[]
+}
+
+type CollectionId = (typeof COLLECTION_IDS)[number]
+
+const RAINDROP_API_URL = "https://api.raindrop.io/rest/v1" as const
+const CACHE_REVALIDATION_TIME = 60 * 60 * 24 * 2 // 2 days
+const DEFAULT_PER_PAGE = 50
+
+const apiConfig = {
   method: "GET",
   headers: {
     "Content-Type": "application/json",
     Authorization: `Bearer ${process.env.NEXT_PUBLIC_RAINDROP_ACCESS_TOKEN}`,
   },
   next: {
-    revalidate: 60 * 60 * 24 * 2, // 2 days
+    revalidate: CACHE_REVALIDATION_TIME,
   },
+} as const
+
+const createApiUrl = (endpoint: string, params?: Record<string, string>) => {
+  const url = new URL(`${RAINDROP_API_URL}${endpoint}`)
+  if (params) {
+    Object.entries(params).forEach(([key, value]) => {
+      url.searchParams.append(key, value)
+    })
+  }
+  return url.toString()
 }
 
-const RAINDROP_API_URL = "https://api.raindrop.io/rest/v1"
-
-type CollectionId = (typeof COLLECTION_IDS)[number]
-
-interface Bookmark {
-  _id: CollectionId
-}
-
-interface BookmarkResponse {
-  result: boolean
-  items: {
-    _id: CollectionId
-    title: string
-    slug: string
-    count: number
-  }[]
+const handleApiResponse = async <T>(response: Response): Promise<T | null> => {
+  if (!response.ok) {
+    throw new Error(`API error: ${response.status}`)
+  }
+  return await response.json()
 }
 
 export const getBookmarkItems = cache(
-  async (id: CollectionId, pageIndex = 0) => {
+  async (id: CollectionId, pageIndex = 0): Promise<RaindropResponse | null> => {
     try {
-      const response = await fetch(
-        `${RAINDROP_API_URL}/raindrops/${id}?` +
-          new URLSearchParams({
-            page: pageIndex.toString(),
-            perpage: "50",
-          }),
-        options
-      )
-      return await response.json()
+      const url = createApiUrl(`/raindrops/${id}`, {
+        page: pageIndex.toString(),
+        perpage: DEFAULT_PER_PAGE.toString(),
+      })
+
+      const response = await fetch(url, apiConfig)
+      return await handleApiResponse<RaindropResponse>(response)
     } catch (error) {
-      console.info(error)
+      console.error("Error fetching bookmark items:", error)
       return null
     }
   }
 )
 
-export const getBookmarks = cache(async () => {
+export const getBookmarks = cache(async (): Promise<RaindropCollection[]> => {
   try {
-    const response = await fetch(`${RAINDROP_API_URL}/collections`, options)
-    const data = await response.json()
+    const url = createApiUrl("/collections")
+    const response = await fetch(url, apiConfig)
+    const data = await handleApiResponse<CollectionResponse>(response)
 
-    if (!data || !data.items) {
-      console.info("Invalid response format:", data)
-      return []
+    if (!data?.items) {
+      throw new Error("Invalid response format")
     }
 
-    const filteredBookmarks = data.items.filter((bookmark: Bookmark) =>
+    return data.items.filter((bookmark) =>
       COLLECTION_IDS.includes(bookmark._id)
     )
-    return filteredBookmarks
   } catch (error) {
-    console.info(error)
+    console.error("Error fetching bookmarks:", error)
     return []
   }
 })
 
-export const getBookmark = cache(async (id: CollectionId) => {
-  try {
-    const response = await fetch(
-      `${RAINDROP_API_URL}/collection/${id}`,
-      options
-    )
-    return await response.json()
-  } catch (error) {
-    console.info(error)
-    return null
+export const getBookmark = cache(
+  async (id: CollectionId): Promise<RaindropCollection | null> => {
+    try {
+      const url = createApiUrl(`/collection/${id}`)
+      const response = await fetch(url, apiConfig)
+      return await handleApiResponse<RaindropCollection>(response)
+    } catch (error) {
+      console.error("Error fetching bookmark:", error)
+      return null
+    }
   }
-})
+)
