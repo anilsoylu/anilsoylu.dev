@@ -17,5 +17,9 @@ export const MenuListItems = (): MenuItem[] => {
       name: "Projects",
       link: "/projects",
     },
+    {
+      name: "Bookmarks",
+      link: "/bookmarks",
+    },
   ]
 }

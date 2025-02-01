@@ -5,6 +5,8 @@ import "./globals.css"
 import dynamic from "next/dynamic"
 import data from "@/data/data.json"
 import { Suspense } from "react"
+import { getBookmarks } from "@/lib/raindrop"
+import { sortByProperty } from "@/lib/utils"
 
 const Header = dynamic(() => import("@/components/shared/header"), {
   loading: () => <div className="h-16" />,
@@ -15,6 +17,12 @@ const LeftSide = dynamic(() => import("@/components/shared/home/left-side"), {
     <div className="w-full min-h-[200px] md:min-h-screen bg-gray-50" />
   ),
 })
+
+async function fetchData() {
+  const bookmarks = await getBookmarks()
+  const sortedBookmarks = bookmarks ? sortByProperty(bookmarks, "title") : []
+  return { bookmarks: sortedBookmarks }
+}
 
 const beVietnamPro = Be_Vietnam_Pro({
   subsets: ["latin"],
@@ -32,11 +40,13 @@ export const metadata = {
   },
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const { bookmarks } = await fetchData()
+
   return (
     <html lang="tr" className={beVietnamPro.variable}>
       <body className="antialiased">
@@ -44,9 +54,7 @@ export default function RootLayout({
           <div className="container px-5 md:px-0 mx-auto max-w-6xl">
             <Header />
             <main className="flex flex-col md:flex-row items-start gap-y-8 md:gap-x-[70px] flex-none flex-nowrap justify-between w-full relative">
-              <div className="w-full md:w-4/12 md:sticky md:top-4">
-                <LeftSide />
-              </div>
+              <LeftSide bookmarks={bookmarks} />
               <div className="flex-initial w-full md:w-8/12 bg-white md:bg-transparent z-10 relative">
                 <Suspense fallback={<div>Loading content...</div>}>
                   {children}

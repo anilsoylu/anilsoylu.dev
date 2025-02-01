@@ -1,5 +1,10 @@
-import { memo } from "react"
+"use client"
+
+import { memo, Suspense } from "react"
 import dynamic from "next/dynamic"
+import { usePathname } from "next/navigation"
+import { ListItem } from "@/components/list-item"
+import { ScreenLoadingSpinner } from "@/components/screen-loading-spinner"
 
 const AvatarComponent = dynamic(
   () => import("@/components/shared/home/avatar"),
@@ -25,10 +30,37 @@ const ContactButton = dynamic(() => import("./contact-button"), {
   ),
 })
 
-const LeftSide = memo(() => {
+const LeftSide = memo(({ bookmarks }: { bookmarks: any }) => {
+  const pathname = usePathname()
+  const isBookmarksPath = pathname.startsWith("/bookmarks")
+
+  if (isBookmarksPath) {
+    return (
+      <aside
+        className="flex-none w-full sticky top-4 md:w-4/12 md:sticky md:top-4"
+        aria-label="Sidebar with personal information"
+      >
+        <Suspense fallback={<ScreenLoadingSpinner />}>
+          <div className="flex flex-col gap-1">
+            {bookmarks?.map((bookmark: any) => {
+              return (
+                <ListItem
+                  key={bookmark._id}
+                  path={`/bookmarks/${bookmark.slug}`}
+                  title={bookmark.title}
+                  description={`${bookmark.count} bookmarks`}
+                />
+              )
+            })}
+          </div>
+        </Suspense>
+      </aside>
+    )
+  }
+
   return (
     <aside
-      className="flex-none w-full sticky top-4"
+      className="flex-none w-full sticky top-4 md:w-4/12 md:sticky md:top-4"
       aria-label="Sidebar with personal information"
     >
       <AvatarComponent />
