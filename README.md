@@ -28,7 +28,13 @@ yarn install
 pnpm install
 ```
 
-3. Start the development server:
+3. Create a `.env` file in the root of the project and add the following variables:
+
+```bash
+NEXT_PUBLIC_RAINDROP_TOKEN=your_raindrop_token
+```
+
+4. Start the development server:
 
 ```bash
 npm run dev
@@ -38,7 +44,7 @@ yarn dev
 pnpm dev
 ```
 
-4. Open [http://localhost:3000](http://localhost:3000) in your browser.
+5. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## 🌐 Live Demo
 
