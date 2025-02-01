@@ -10,6 +10,14 @@ My personal website built with Next.js 15.
 - /bookmarks -> Bookmarks
 - /bookmarks/[slug] -> Static pre-rendered bookmarks pages using [Raindrop.io](https://raindrop.io).
 
+## Tech Stack
+
+- [Next.js](https://nextjs.org)
+- [Tailwind CSS](https://tailwindcss.com)
+- [shadcn/ui](https://ui.shadcn.com)
+- [Raindrop.io](https://raindrop.io)
+- [Vercel](https://vercel.com)
+
 ## Running Locally
 
 1. Clone the project:
@@ -49,14 +57,6 @@ pnpm dev
 ## 🌐 Live Demo
 
 [https://anilsoylu.dev](https://anilsoylu.dev)
-
-## Tech Stack
-
-- [Next.js](https://nextjs.org)
-- [Tailwind CSS](https://tailwindcss.com)
-- [shadcn/ui](https://ui.shadcn.com)
-- [Raindrop.io](https://raindrop.io)
-- [Vercel](https://vercel.com)
 
 ## Repo Activity
 
